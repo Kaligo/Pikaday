@@ -680,19 +680,6 @@
         self.el = document.createElement('div');
         self.el.className = 'pika-single' + (opts.isRTL ? ' is-rtl' : '') + (opts.theme ? ' ' + opts.theme : '');
 
-        self.speakEl = document.createElement('div');
-				self.speakEl.setAttribute('role', 'status');
-				self.speakEl.setAttribute('aria-live', 'assertive');
-				self.speakEl.setAttribute('aria-atomic', 'true');
-        self.speakEl.setAttribute(
-          'id',
-          'boke-no-boke'
-        );
-				self.speakEl.setAttribute(
-					'style',
-					'position: absolute; left: -9999px; opacity: 0;'
-				);
-
         addEvent(self.el, 'mousedown', self._onMouseDown, true);
         addEvent(self.el, 'touchend', self._onMouseDown, true);
         addEvent(self.el, 'change', self._onChange);
@@ -892,10 +879,6 @@
             }
             if (!preventOnSelect && typeof this._o.onSelect === 'function') {
                 this._o.onSelect.call(this, this.getDate());
-            }
-
-            if (this._d) {
-                  this.speak(this.getLabel());
             }
         },
 
@@ -1332,7 +1315,6 @@
 
         show: function()
         {
-            document.body.appendChild(this.speakEl);
             if (!this.isVisible()) {
                 this._v = true;
                 this.draw();
@@ -1343,10 +1325,6 @@
                 }
                 if (typeof this._o.onOpen === 'function') {
                     this._o.onOpen.call(this);
-                }
-
-                if (this._o.field && this._o.field != this._o.trigger) {
-                  this.speak(this.getLabel());
                 }
             }
         },
@@ -1364,11 +1342,6 @@
     			label += ' (' + opts.i18n.help + ')';
     			return label;
     		},
-
-        speak: function (html) {
-          this.speak.innerHTML = '';
-          this.speakEl.innerHTML = html;
-        },
 
         hide: function()
         {
