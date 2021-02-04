@@ -1329,20 +1329,6 @@
             }
         },
 
-        getLabel: function () {
-    			var label = '',
-    				opts = this._o;
-    			if (opts.field && opts.field.id) {
-    				label = document.querySelector('label[for="' + opts.field.id + '"]');
-    				label = label ? label.textContent || label.innerText : '';
-    			}
-    			if (!label && opts.trigger) {
-    				label = opts.trigger.textContent || opts.trigger.innerText;
-    			}
-    			label += ' (' + opts.i18n.help + ')';
-    			return label;
-    		},
-
         hide: function()
         {
             var v = this._v;
@@ -1395,3 +1381,4 @@
 
     return Pikaday;
 }));
+s
