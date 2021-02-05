@@ -1381,4 +1381,3 @@
 
     return Pikaday;
 }));
-s
