@@ -429,8 +429,9 @@
 
         monthInnerHtml = opts.i18n.months[month] + '<select class="pika-select pika-select-month" tabindex="-1">' + arr.join('');
 
-        if (instance.el.querySelector('div#' + randId + ' .pika-label-month')) {
-            instance.el.querySelector('div#' + randId + ' .pika-label-month').innerHTML = monthInnerHtml;
+        var monthSelector = instance.el.querySelector('div#' + randId + ' .pika-label-month');
+        if (monthSelector) {
+            monthSelector.innerHTML = monthInnerHtml;
         } else {
             monthHtml = '<div class="pika-label pika-label-month">' + monthInnerHtml + '</select></div>';
         }
@@ -451,8 +452,9 @@
 
         yearInnerHtml = year + opts.yearSuffix + '<select class="pika-select pika-select-year" tabindex="-1">' + arr.join('')
 
-        if (instance.el.querySelector('div#' + randId + ' .pika-label-year')) {
-            instance.el.querySelector('div#' + randId + ' .pika-label-year').innerHTML = yearInnerHtml;
+        var yearSelector = instance.el.querySelector('div#' + randId + ' .pika-label-year');
+        if (yearSelector) {
+            yearSelector.innerHTML = yearInnerHtml;
         } else {
             yearHtml = '<div class="pika-label pika-label-year">' + yearInnerHtml + '</select></div>';
         }
@@ -1107,8 +1109,9 @@
                 var pikaTitleContainer = renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year, randId);
 
                 // update the days container only
-                if (this.el.querySelector('div#pika-days-' + c)) {
-                    this.el.querySelector('div#pika-days-' + c).innerHTML = pikaDaysContainer;
+                var dayContainerSelector = this.el.querySelector('div#pika-days-' + c);
+                if (dayContainerSelector) {
+                    dayContainerSelector.innerHTML = pikaDaysContainer;
                 } else {
                     html += '<div class="pika-lendar">' + pikaTitleContainer + pikaDaysContainer + '</div>';
                 }
