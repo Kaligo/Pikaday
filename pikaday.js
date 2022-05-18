@@ -413,8 +413,10 @@
             isMinYear = year === opts.minYear,
             isMaxYear = year === opts.maxYear,
             html = '<div id="' + randId + '" class="pika-title" role="heading">',
-            monthHtml,
-            yearHtml,
+            monthHtml = '',
+            monthInnerHtml,
+            yearHtml = '',
+            yearInnerHtml,
             prev = true,
             next = true;
 
@@ -425,7 +427,14 @@
                 opts.i18n.months[i] + '</option>');
         }
 
-        monthHtml = '<div class="pika-label">' + opts.i18n.months[month] + '<select class="pika-select pika-select-month" tabindex="-1">' + arr.join('') + '</select></div>';
+        monthInnerHtml = opts.i18n.months[month] + '<select class="pika-select pika-select-month" tabindex="-1">' + arr.join('');
+
+        var monthSelector = instance.el.querySelector('div#' + randId + ' .pika-label-month');
+        if (monthSelector) {
+            monthSelector.innerHTML = monthInnerHtml;
+        } else {
+            monthHtml = '<div class="pika-label pika-label-month">' + monthInnerHtml + '</select></div>';
+        }
 
         if (isArray(opts.yearRange)) {
             i = opts.yearRange[0];
@@ -440,7 +449,15 @@
                 arr.push('<option value="' + i + '"' + (i === year ? ' selected="selected"': '') + '>' + (i) + '</option>');
             }
         }
-        yearHtml = '<div class="pika-label">' + year + opts.yearSuffix + '<select class="pika-select pika-select-year" tabindex="-1">' + arr.join('') + '</select></div>';
+
+        yearInnerHtml = year + opts.yearSuffix + '<select class="pika-select pika-select-year" tabindex="-1">' + arr.join('')
+
+        var yearSelector = instance.el.querySelector('div#' + randId + ' .pika-label-year');
+        if (yearSelector) {
+            yearSelector.innerHTML = yearInnerHtml;
+        } else {
+            yearHtml = '<div class="pika-label pika-label-year">' + yearInnerHtml + '</select></div>';
+        }
 
         if (opts.showMonthAfterYear) {
             html += yearHtml + monthHtml;
@@ -456,10 +473,15 @@
             next = false;
         }
 
-        if (c === 0) {
+        if (instance.el.querySelector('button.pika-prev')) {
+            instance.updatePikaMonthButton(instance, 'button.pika-prev', prev);
+        } else if (c === 0) {
             html += '<button class="pika-prev' + (prev ? '' : ' is-disabled') + '" type="button"> Previous Month </button>';
         }
-        if (c === (instance._o.numberOfMonths - 1) ) {
+
+        if (instance.el.querySelector('button.pika-next')) {
+            instance.updatePikaMonthButton(instance, 'button.pika-next', next);
+        } else if (c === (instance._o.numberOfMonths - 1) ) {
             html += '<button class="pika-next' + (next ? '' : ' is-disabled') + '" type="button"> Next Month</button>';
         }
 
@@ -1082,13 +1104,23 @@
             }
 
             for (var c = 0; c < opts.numberOfMonths; c++) {
-                randId = 'pika-title-' +
-                  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 2);
+                randId = 'pika-title-' + c;
+                var pikaDaysContainer = this.render(this.calendars[c].year, this.calendars[c].month, randId);
+                var pikaTitleContainer = renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year, randId);
 
-                html += '<div class="pika-lendar">' + renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year, randId) + this.render(this.calendars[c].year, this.calendars[c].month, randId) + '</div>';
+                // update the days container only
+                var dayContainerSelector = this.el.querySelector('div#pika-days-' + c);
+                if (dayContainerSelector) {
+                    dayContainerSelector.innerHTML = pikaDaysContainer;
+                } else {
+                    html += '<div class="pika-lendar">' + pikaTitleContainer + '<div id="pika-days-' + c + '">' + pikaDaysContainer + '</div></div>';
+                }
             }
 
-            this.el.innerHTML = html;
+            // if there is no calendar existing
+            if (this.el.querySelectorAll('div.pika-lendar').length === 0) {
+                this.el.innerHTML = html;
+            }
 
             if (opts.bound) {
                 if(opts.field.type !== 'hidden') {
@@ -1126,6 +1158,19 @@
 
               self.focusInside = true;
               this.focusPicker();
+            }
+        },
+
+        updatePikaMonthButton: function (instance, querySelector, status) {
+            var selector = instance.el.querySelector(querySelector);
+            if (!selector) {
+                return;
+            }
+
+            if (status) {
+                selector.classList.remove('is-disabled');
+            } else {
+                selector.classList.add('is-disabled');
             }
         },
 
