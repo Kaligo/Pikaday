@@ -1105,7 +1105,7 @@
 
             for (var c = 0; c < opts.numberOfMonths; c++) {
                 randId = 'pika-title-' + c;
-                var pikaDaysContainer = '<div id="pika-days-' + c + '">' + this.render(this.calendars[c].year, this.calendars[c].month, randId) + '</div>';
+                var pikaDaysContainer = this.render(this.calendars[c].year, this.calendars[c].month, randId);
                 var pikaTitleContainer = renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year, randId);
 
                 // update the days container only
@@ -1113,7 +1113,7 @@
                 if (dayContainerSelector) {
                     dayContainerSelector.innerHTML = pikaDaysContainer;
                 } else {
-                    html += '<div class="pika-lendar">' + pikaTitleContainer + pikaDaysContainer + '</div>';
+                    html += '<div class="pika-lendar">' + pikaTitleContainer + '<div id="pika-days-' + c + '">' + pikaDaysContainer + '</div></div>';
                 }
             }
 
